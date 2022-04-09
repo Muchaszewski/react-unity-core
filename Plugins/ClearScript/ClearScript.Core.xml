@@ -11,6 +11,30 @@
             <returns><c>True</c> to continue script execution, <c>false</c> to interrupt it.</returns>
             <seealso cref="P:Microsoft.ClearScript.ScriptEngine.ContinuationCallback"/>
         </member>
+        <member name="T:Microsoft.ClearScript.CustomAttributeLoader">
+            <summary>
+            Represents a custom attribute loader.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ClearScript.CustomAttributeLoader.#ctor">
+            <summary>
+            Initializes a new <see cref="T:Microsoft.ClearScript.CustomAttributeLoader"/> instance.
+            </summary>
+        </member>
+        <member name="M:Microsoft.ClearScript.CustomAttributeLoader.LoadCustomAttributes``1(System.Reflection.ICustomAttributeProvider,System.Boolean)">
+            <summary>
+            Loads custom attributes of the specified type for the given resource.
+            </summary>
+            <typeparam name="T">The type, or a base type, of the custom attributes to load.</typeparam>
+            <param name="resource">The resource for which to load custom attributes of type <typeparamref name="T"/>.</param>
+            <param name="inherit"><c>True</c> to include custom attributes of type <typeparamref name="T"/> defined for ancestors of <paramref name="resource"/>, <c>false</c> otherwise.</param>
+            <returns>An array of custom attributes of type <typeparamref name="T"/>.</returns>.
+            <remarks>
+            This method is performance-critical. Overrides must not invoke script engine methods or
+            other ClearScript functionality. The base implementation loads custom attributes via
+            reflection.
+            </remarks>
+        </member>
         <member name="T:Microsoft.ClearScript.DefaultScriptUsageAttribute">
             <summary>
             Specifies defaults for how type members are to be exposed to script code.
@@ -1877,14 +1901,10 @@
             resources such as native assemblies and related data files.
             </remarks>
         </member>
-        <member name="P:Microsoft.ClearScript.HostSettings.IsAndroid">
+        <member name="P:Microsoft.ClearScript.HostSettings.CustomAttributeLoader">
             <summary>
-            Sets the runtime platform to android and loads android native binaries.
+            Gets or sets the custom attribute loader for ClearScript.
             </summary>
-            <remarks>
-            This property allows ClearScript to load android native assemblies instead of 
-            linux assemblies on Android Mono
-            </remarks>
         </member>
         <member name="T:Microsoft.ClearScript.HostTypeCollection">
             <summary>
@@ -2123,6 +2143,30 @@
             <param name="offset">The offset within the <c>ArrayBuffer</c> at which to store the first copied byte.</param>
             <returns>The number of bytes copied.</returns>
         </member>
+        <member name="M:Microsoft.ClearScript.JavaScript.IArrayBuffer.InvokeWithDirectAccess(System.Action{System.IntPtr})">
+            <summary>
+            Invokes a delegate that returns no value, giving it direct access to the <c>ArrayBuffer</c>'s contents.
+            </summary>
+            <param name="action">The delegate to invoke.</param>
+            <remarks>
+            This method invokes the specified delegate, passing in the memory address of the
+            <c>ArrayBuffer</c>'s contents. This memory address is valid only while the delegate is
+            executing. The delegate must not access memory outside the <c>ArrayBuffer</c>'s range.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.ClearScript.JavaScript.IArrayBuffer.InvokeWithDirectAccess``1(System.Func{System.IntPtr,``0})">
+            <summary>
+            Invokes a delegate that returns a value, giving it direct access to the <c>ArrayBuffer</c>'s contents.
+            </summary>
+            <typeparam name="T">The delegate's return type.</typeparam>
+            <param name="func">The delegate to invoke.</param>
+            <returns>The delegate's return value.</returns>
+            <remarks>
+            This method invokes the specified delegate, passing in the memory address of the
+            <c>ArrayBuffer</c>'s contents. This memory address is valid only while the delegate is
+            executing. The delegate must not access memory outside the <c>ArrayBuffer</c>'s range.
+            </remarks>
+        </member>
         <member name="T:Microsoft.ClearScript.JavaScript.IArrayBufferView">
             <summary>
             Defines properties and methods common to all
@@ -2170,6 +2214,30 @@
             <param name="count">The maximum number of bytes to copy.</param>
             <param name="offset">The offset within the view at which to store the first copied byte.</param>
             <returns>The number of bytes copied.</returns>
+        </member>
+        <member name="M:Microsoft.ClearScript.JavaScript.IArrayBufferView.InvokeWithDirectAccess(System.Action{System.IntPtr})">
+            <summary>
+            Invokes a delegate that returns no value, giving it direct access to the view's contents.
+            </summary>
+            <param name="action">The delegate to invoke.</param>
+            <remarks>
+            This method invokes the specified delegate, passing in the memory address of the view's
+            contents. This memory address is valid only while the delegate is executing. The
+            delegate must not access memory outside the view's range.
+            </remarks>
+        </member>
+        <member name="M:Microsoft.ClearScript.JavaScript.IArrayBufferView.InvokeWithDirectAccess``1(System.Func{System.IntPtr,``0})">
+            <summary>
+            Invokes a delegate that returns a value, giving it direct access to the view's contents.
+            </summary>
+            <typeparam name="T">The delegate's return type.</typeparam>
+            <param name="func">The delegate to invoke.</param>
+            <returns>The delegate's return value.</returns>
+            <remarks>
+            This method invokes the specified delegate, passing in the memory address of the view's
+            contents. This memory address is valid only while the delegate is executing. The
+            delegate must not access memory outside the view's range.
+            </remarks>
         </member>
         <member name="T:Microsoft.ClearScript.JavaScript.IDataView">
             <summary>
@@ -2400,12 +2468,12 @@
         </member>
         <member name="M:Microsoft.ClearScript.PropertyBag.#ctor">
             <summary>
-            Initializes a new writable <see cref="T:Microsoft.ClearScript.PropertyBag"/>.
+            Initializes a new writable <see cref="T:Microsoft.ClearScript.PropertyBag"/> with the default property name comparer.
             </summary>
         </member>
         <member name="M:Microsoft.ClearScript.PropertyBag.#ctor(System.Boolean)">
             <summary>
-            Initializes a new <see cref="T:Microsoft.ClearScript.PropertyBag"/>.
+            Initializes a new <see cref="T:Microsoft.ClearScript.PropertyBag"/> with the default property name comparer.
             </summary>
             <param name="isReadOnly"><c>True</c> to make the <see cref="T:Microsoft.ClearScript.PropertyBag"/> read-only, <c>false</c> to make it writable.</param>
             <remarks>
@@ -2414,6 +2482,24 @@
             <see cref="M:Microsoft.ClearScript.PropertyBag.RemovePropertyNoCheck(System.String)">RemovePropertyNoCheck</see>, or
             <see cref="M:Microsoft.ClearScript.PropertyBag.ClearNoCheck">ClearNoCheck</see>.
             </remarks>
+        </member>
+        <member name="M:Microsoft.ClearScript.PropertyBag.#ctor(System.Collections.Generic.IEqualityComparer{System.String})">
+            <summary>
+            Initializes a new writable <see cref="T:Microsoft.ClearScript.PropertyBag"/>.
+            </summary>
+            <param name="comparer">The comparer to use for property names, or <c>null</c> to use the default string comparer.</param>
+        </member>
+        <member name="M:Microsoft.ClearScript.PropertyBag.#ctor(System.Boolean,System.Collections.Generic.IEqualityComparer{System.String})">
+            <summary>
+            Initializes a new <see cref="T:Microsoft.ClearScript.PropertyBag"/>.
+            </summary>
+            <param name="isReadOnly"><c>True</c> to make the <see cref="T:Microsoft.ClearScript.PropertyBag"/> read-only, <c>false</c> to make it writable.</param>
+            <param name="comparer">The comparer to use for property names, or <c>null</c> to use the default string comparer.</param>
+        </member>
+        <member name="P:Microsoft.ClearScript.PropertyBag.Comparer">
+            <summary>
+            Gets the property name comparer for the <see cref="T:Microsoft.ClearScript.PropertyBag"/>.
+            </summary>
         </member>
         <member name="M:Microsoft.ClearScript.PropertyBag.SetPropertyNoCheck(System.String,System.Object)">
             <summary>
@@ -4174,6 +4260,27 @@
             <remarks>
             The <see cref="T:Microsoft.ClearScript.Undefined"/> version of this method returns "[undefined]".
             </remarks>
+        </member>
+        <member name="T:Microsoft.ClearScript.Util.IDisposableEnumerator">
+            <exclude/>
+        </member>
+        <member name="T:Microsoft.ClearScript.Util.IAsyncEnumeratorPromise`1">
+            <exclude/>
+        </member>
+        <member name="P:Microsoft.ClearScript.Util.IAsyncEnumeratorPromise`1.Current">
+            <exclude/>
+        </member>
+        <member name="M:Microsoft.ClearScript.Util.IAsyncEnumeratorPromise`1.MoveNextAsync">
+            <exclude/>
+        </member>
+        <member name="M:Microsoft.ClearScript.Util.IAsyncEnumeratorPromise`1.DisposeAsync">
+            <exclude/>
+        </member>
+        <member name="M:Microsoft.ClearScript.Util.IAsyncEnumeratorPromise`1.MoveNextPromise">
+            <exclude/>
+        </member>
+        <member name="M:Microsoft.ClearScript.Util.IAsyncEnumeratorPromise`1.DisposePromise">
+            <exclude/>
         </member>
         <member name="T:Microsoft.ClearScript.VoidResult">
             <summary>

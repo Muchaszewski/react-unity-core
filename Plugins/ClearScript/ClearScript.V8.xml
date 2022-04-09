@@ -220,6 +220,33 @@
             Specifies that automatic sample collection is to be enabled.
             </summary>
         </member>
+        <member name="T:Microsoft.ClearScript.V8.V8GlobalFlags">
+            <summary>
+            Defines global V8 options.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ClearScript.V8.V8GlobalFlags.None">
+            <summary>
+            Specifies that no options are selected.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ClearScript.V8.V8GlobalFlags.EnableTopLevelAwait">
+            <summary>
+            Specifies that <see href="https://github.com/tc39/proposal-top-level-await">Top-Level Await</see> is to be enabled.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ClearScript.V8.V8GlobalFlags.DisableJITCompilation">
+            <summary>
+            Specifies that just-in-time compilation is to be disabled.
+            </summary>
+        </member>
+        <member name="F:Microsoft.ClearScript.V8.V8GlobalFlags.DisableBackgroundWork">
+            <summary>
+            Specifies that background work is to be disabled. By default, V8 performs various tasks
+            in the background, accelerating garbage collection, just-in-time compilation, and other
+            activities. Use this option if you encounter issues related to V8's background work.
+            </summary>
+        </member>
         <member name="T:Microsoft.ClearScript.V8.V8Runtime">
             <summary>
             Represents an instance of the V8 runtime.
@@ -1700,6 +1727,13 @@
             <see cref="F:Microsoft.ClearScript.V8.V8ScriptEngineFlags.EnableTaskPromiseConversion"/> is not specified.
             </summary>
         </member>
+        <member name="F:Microsoft.ClearScript.V8.V8ScriptEngineFlags.UseCaseInsensitiveMemberBinding">
+            <summary>
+            Specifies that access to host object and class members is to be case-insensitive. This
+            option can introduce ambiguity if the host resource has distinct members whose names
+            differ only in case, so it should be used with caution.
+            </summary>
+        </member>
         <member name="T:Microsoft.ClearScript.V8.V8Settings">
             <summary>
             Defines properties that comprise ClearScript's V8 configuration.
@@ -1724,6 +1758,16 @@
             <see cref="T:Microsoft.ClearScript.V8.V8ScriptEngine"/> or <see cref="T:Microsoft.ClearScript.V8.V8Runtime"/> for the first time. Subsequent
             reassignment will have no effect.
             </para>
+            </remarks>
+        </member>
+        <member name="P:Microsoft.ClearScript.V8.V8Settings.GlobalFlags">
+            <summary>
+            Gets or sets global V8 options.
+            </summary>
+            <remarks>
+            To override the default global options, set this property before instantiating
+            <see cref="T:Microsoft.ClearScript.V8.V8ScriptEngine"/> or <see cref="T:Microsoft.ClearScript.V8.V8Runtime"/> for the first time. Subsequent
+            reassignment will have no effect.
             </remarks>
         </member>
     </members>
